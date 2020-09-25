@@ -1,7 +1,7 @@
 import gym
 
 # Load an environment
-env = gym.make('MountainCar-v0')
+env = gym.make('AiProject-CustomEnvs:MountainCar-Custom')
 
 # Run 20 episodes. Resets environment at start of each run
 for i_episode in range(20):
