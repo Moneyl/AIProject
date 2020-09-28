@@ -15,11 +15,14 @@ int main()
     int numInputs = 2;
     int numHiddenNeurons = 1;
     int numOutputNeurons = 2;
+    int numTrainingRuns = 2000;
 
     //Add layers to neural net
     net.Layers.push_back(Layer(numHiddenNeurons, numInputs));
     net.Layers.push_back(Layer(numOutputNeurons, numHiddenNeurons));
     
+    //Todo: Test network with larger data set
+    //Todo: Find real data to test the on the network. This is just mock data with no meaning
     std::vector<float> testInput1 = { 1.0f, 0.0f };
     std::vector<float> testExpectedOutput1 = { 0.0f, 1.0f };
 
@@ -32,36 +35,15 @@ int main()
     printf("Output layer neurons:\n");
     outputLayer.PrintValues();
 
-    printf("\nTesting forward propagation...");
-    std::vector<float> forwardPropResult = net.ForwardPropagate(testInput1);
+    //Train network
+    printf("\nTraining neural network with %d runs...", numTrainingRuns);
+    net.Train({ testInput1 }, { testExpectedOutput1 }, numTrainingRuns);
     printf(" Done.\n");
-    printf("Forward propagation result: {");
-    for (int i = 0; i < forwardPropResult.size(); i++)
-    {
-        if (i != 0)
-            printf(", ");
 
-        printf("%f", forwardPropResult[i]);
-    }
-    printf("}\n\n");
-
-
-    printf("Neural net values after forward propagation: \n");
+    //Output neuron values post training
+    printf("Neural net values after training: \n");
     printf("Hidden layer neurons:\n");
     hiddenLayer.PrintValues();
     printf("Output layer neurons:\n");
     outputLayer.PrintValues();
-
-
-    printf("\n\nTesting back propagation...");
-    net.Backpropagate(testExpectedOutput1);
-    printf(" Done.\n");
-
-    printf("Neural net values after back propagation: \n");
-    printf("Hidden layer neurons:\n");
-    hiddenLayer.PrintValues();
-    printf("Output layer neurons:\n");
-    outputLayer.PrintValues();
-
-    auto a = 2;
 }

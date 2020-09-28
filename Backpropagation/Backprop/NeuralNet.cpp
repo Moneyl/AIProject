@@ -99,5 +99,21 @@ void NeuralNet::UpdateNeuronWeights(const std::vector<float>& inputBase)
 
 void NeuralNet::Train(std::vector<std::vector<float>> inputs, std::vector<std::vector<float>> expectedOutputs, int numTrainingRuns)
 {
+    //Train the network numTrainingRuns times
+    for (int run = 0; run < numTrainingRuns; run++)
+    {
+        //For each run forward and back propagate the network on all inputs
+        for (int i = 0; i < inputs.size(); i++)
+        {
+            //Get selected inputs and outputs
+            std::vector<float>& input = inputs[i];
+            std::vector<float>& expectedOutput = expectedOutputs[i];
 
+            //First forward propagate the input
+            std::vector<float> outputs = ForwardPropagate(input);
+            //Next, back propagate the network to get the error for each neuron, then update their weights
+            Backpropagate(expectedOutput);
+            UpdateNeuronWeights(input);
+        }
+    }
 }
