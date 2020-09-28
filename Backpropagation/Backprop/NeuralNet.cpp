@@ -11,8 +11,10 @@ std::vector<float> NeuralNet::ForwardPropagate(const std::vector<float>& inputBa
         std::vector<float> outputs = {};
         for (auto& neuron : layer.Neurons)
         {
-            float activationValue = neuron.Activate(inputs);
-            outputs.push_back(neuron.Transfer(activationValue));
+            //Calculate neuron output by summing the multiples of weights and inputs (WeightN * InputN)
+            //Then pass that through the sigmoid function to normalize it [0.0 to 1.0]
+            float activationValue = neuron.CalculateOutput(inputs);
+            outputs.push_back(neuron.Sigmoid(activationValue));
             neuron.LastOutput = outputs.back();
         }
 
@@ -52,6 +54,7 @@ void NeuralNet::Backpropagate(const std::vector<float>& expectedOutputs)
         {
             for (int j = 0; j < layer.Neurons.size(); j++)
             {
+                //Error here is difference between the output and expected output
                 Neuron& neuron = layer.Neurons[j];
                 outputErrors.push_back(expectedOutputs[j] - neuron.LastOutput);
             }
@@ -61,7 +64,7 @@ void NeuralNet::Backpropagate(const std::vector<float>& expectedOutputs)
         for (int j = 0; j < layer.Neurons.size(); j++)
         {
             Neuron& neuron = layer.Neurons[j];
-            neuron.LastError = outputErrors[j] * neuron.TransferDelta(neuron.LastOutput);
+            neuron.LastError = outputErrors[j] * neuron.SigmoidDerivative(neuron.LastOutput);
         }
     }
 }
@@ -92,6 +95,7 @@ void NeuralNet::UpdateNeuronWeights(const std::vector<float>& inputBase)
             {
                 neuron.Weights[j] += LearningRate * neuron.LastError * inputs[j];
             }
+            //Adjust bias towards expected output
             neuron.Bias += LearningRate * neuron.LastError;
         }
     }
@@ -111,7 +115,7 @@ void NeuralNet::Train(std::vector<std::vector<float>> inputs, std::vector<std::v
 
             //First forward propagate the input
             std::vector<float> outputs = ForwardPropagate(input);
-            //Next, back propagate the network to get the error for each neuron, then update their weights
+            //Next, back propagate the network to get the error for each neuron and update their weights
             Backpropagate(expectedOutput);
             UpdateNeuronWeights(input);
         }

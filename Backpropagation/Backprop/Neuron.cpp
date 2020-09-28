@@ -14,7 +14,7 @@ Neuron::Neuron(int numWeights)
     Bias = GetRandomNumNormalized();
 }
 
-float Neuron::Activate(const std::vector<float>& inputs)
+float Neuron::CalculateOutput(const std::vector<float>& inputs)
 {
     float activationValue = Bias;
     for (int i = 0; i < Weights.size(); i++)
@@ -23,14 +23,14 @@ float Neuron::Activate(const std::vector<float>& inputs)
     return activationValue;
 }
 
-float Neuron::Transfer(float activationValue)
+float Neuron::Sigmoid(float activationValue)
 {
-    //Todo: Look at alternative transfer functions. Remember to update TransferDelta as well
+    //Todo: Look at alternative transfer functions. Remember to update SigmoidDerivative as well
     //Using sigmoid transfer function
     return 1.0f / (1.0f + exp(-activationValue));
 }
 
-float Neuron::TransferDelta(float output)
+float Neuron::SigmoidDerivative(float output)
 {
     //Todo: Remember to update this whenever changing the transfer function
     //Derivative of the sigmoid function. Calculating slope on sigmoid at x = output
