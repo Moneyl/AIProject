@@ -5,24 +5,24 @@ std::vector<float> NeuralNet::ForwardPropagate(const std::vector<float>& inputBa
     //Feed first layer inputs (equivalent to an input layer)
     std::vector<float> inputs = inputBase;
 
-    //Loop through each layer, and each neuron, using the activation and transfer functions as input for the next layer
+    //Loop through each layer, and each neuron, using output of each neuron as inputs for the next layer
     for (auto& layer : Layers)
     {
         std::vector<float> outputs = {};
         for (auto& neuron : layer.Neurons)
         {
-            //Calculate neuron output by summing the multiples of weights and inputs (WeightN * InputN)
+            //Calculate neuron output by summing the multiples of weights and inputs (Average of inputs)
             //Then pass that through the sigmoid function to normalize it [0.0 to 1.0]
-            float activationValue = neuron.CalculateOutput(inputs);
-            outputs.push_back(neuron.Sigmoid(activationValue));
-            neuron.LastOutput = outputs.back();
+            float output = neuron.CalculateOutput(inputs);
+            outputs.push_back(neuron.Sigmoid(output));
+            neuron.LastOutput = outputs.back(); //Store the output in the neuron for backprop
         }
 
-        //The input of the next layer are the outputs of the current one
+        //The outputs of the current layer are inputs of the next one
         inputs = outputs;
     }
 
-    //Finally, return the output of the final layer
+    //Finally, return the outputs of the final layer
     return inputs;
 }
 

@@ -16,25 +16,26 @@ Neuron::Neuron(int numWeights)
 
 float Neuron::CalculateOutput(const std::vector<float>& inputs)
 {
-    float activationValue = Bias;
+    //Base value of output is the bias
+    float output = Bias;
+
+    //Sum the multiples of weights and inputs
     for (int i = 0; i < Weights.size(); i++)
-        activationValue += Weights[i] * inputs[i];
+        output += Weights[i] * inputs[i];
 
-    return activationValue;
+    return output;
 }
 
-float Neuron::Sigmoid(float activationValue)
+float Neuron::Sigmoid(float value)
 {
-    //Todo: Look at alternative transfer functions. Remember to update SigmoidDerivative as well
     //Using sigmoid transfer function
-    return 1.0f / (1.0f + exp(-activationValue));
+    return 1.0f / (1.0f + exp(-value));
 }
 
-float Neuron::SigmoidDerivative(float output)
+float Neuron::SigmoidDerivative(float value)
 {
-    //Todo: Remember to update this whenever changing the transfer function
-    //Derivative of the sigmoid function. Calculating slope on sigmoid at x = output
-    return output * (1.0f - output);
+    //Derivative of the sigmoid function. Calculating slope on sigmoid at x = value
+    return value * (1.0f - value);
 }
 
 //Returns a random float value between 0.0 and 1.0 using rand(). Should be seeded with srand by user before running
