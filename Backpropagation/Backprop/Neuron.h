@@ -17,5 +17,5 @@ public:
     //The influence strength of each input on the next neuron
     std::vector<float> Weights = {};
     float LastOutput = 0.0f;
-    float LastError = 0.0f;
+    float ErrorDelta = 0.0f;
 };

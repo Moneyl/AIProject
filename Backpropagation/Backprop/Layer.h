@@ -24,7 +24,7 @@ public:
         {
             printf("    Bias: %f\n", neuron.Bias);
             printf("    LastOutput: %f\n", neuron.LastOutput);
-            printf("    LastError: %f\n", neuron.LastError);
+            printf("    ErrorDelta: %f\n", neuron.ErrorDelta);
             printf("    Weights: {");
             for (int i = 0; i < neuron.Weights.size(); i++)
             {

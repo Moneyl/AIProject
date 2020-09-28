@@ -34,37 +34,33 @@ void NeuralNet::Backpropagate(const std::vector<float>& expectedOutputs)
         Layer& layer = Layers[i];
         std::vector<float> outputErrors = {};
 
-        //Special case for hidden layer
-        if (i == 0)
+        //Loop through all neurons in layer
+        for (int j = 0; j < layer.Neurons.size(); j++)
         {
-            //Calculate error for each neuron in the hidden layer
-            for (int j = 0; j < layer.Neurons.size(); j++)
+            if (i == Layers.size() - 1) //Output layer
+            {
+                //Error for neurons in output layer is the difference between the output and expected output
+                Neuron& neuron = layer.Neurons[j];
+                outputErrors.push_back(expectedOutputs[j] - neuron.LastOutput);
+            }
+            else //Hidden layer
             {
                 float error = 0.0f;
-                Layer& outputLayer = Layers[i + 1];
+                Layer& nextLayer = Layers[i + 1];
 
-                //For the hidden layer add the errors of all output neurons weights that correspond to the hidden layer neuron 
-                for (auto& neuron : outputLayer.Neurons)
-                    error += neuron.Weights[j] * neuron.LastError;
+                //For the hidden layer sum the multiples of each neurons weight and error deltas
+                for (auto& neuron : nextLayer.Neurons)
+                    error += neuron.Weights[j] * neuron.ErrorDelta;
 
                 outputErrors.push_back(error);
             }
         }
-        else //Behavior for all other layers
-        {
-            for (int j = 0; j < layer.Neurons.size(); j++)
-            {
-                //Error here is difference between the output and expected output
-                Neuron& neuron = layer.Neurons[j];
-                outputErrors.push_back(expectedOutputs[j] - neuron.LastOutput);
-            }
-        }
 
-        //Update error value of neurons in layer
+        //Update error delta of neurons in layer
         for (int j = 0; j < layer.Neurons.size(); j++)
         {
             Neuron& neuron = layer.Neurons[j];
-            neuron.LastError = outputErrors[j] * neuron.SigmoidDerivative(neuron.LastOutput);
+            neuron.ErrorDelta = outputErrors[j] * neuron.SigmoidDerivative(neuron.LastOutput);
         }
     }
 }
@@ -78,8 +74,8 @@ void NeuralNet::UpdateNeuronWeights(const std::vector<float>& inputBase)
     {
         Layer& currentLayer = Layers[i];
 
-        //If not hidden layer use outputs of previous layer as input
-        if (i != 0) //Not the hidden layer
+        //If not a hidden layer use outputs of previous layer as input
+        if (i != 0) //Not a hidden layer
         {
             //Clear inputs and set to outputs of previous layer
             inputs.clear();
@@ -93,10 +89,10 @@ void NeuralNet::UpdateNeuronWeights(const std::vector<float>& inputBase)
         {
             for (int j = 0; j < inputs.size(); j++)
             {
-                neuron.Weights[j] += LearningRate * neuron.LastError * inputs[j];
+                neuron.Weights[j] += LearningRate * neuron.ErrorDelta * inputs[j];
             }
             //Adjust bias towards expected output
-            neuron.Bias += LearningRate * neuron.LastError;
+            neuron.Bias += LearningRate * neuron.ErrorDelta;
         }
     }
 }
