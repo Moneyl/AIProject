@@ -11,4 +11,6 @@ public:
 
     float Bias = 0.0f;
     std::vector<float> Weights = {};
+    float LastOutput = 0.0f;
+    float LastError = 0.0f;
 };

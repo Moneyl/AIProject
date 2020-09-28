@@ -19,6 +19,9 @@ int main()
     //Add layers to neural net
     net.Layers.push_back(Layer(numHiddenNeurons, numInputs));
     net.Layers.push_back(Layer(numOutputNeurons, numHiddenNeurons));
+    
+    std::vector<float> testInput1 = { 1.0f, 0.0f };
+    std::vector<float> testExpectedOutput1 = { 0.0f, 1.0f };
 
     //Output initial neuron values
     printf("Created a neural network with %d inputs, %d hidden neurons, and %d output neurons.\n", numInputs, numHiddenNeurons, numOutputNeurons);
@@ -30,7 +33,6 @@ int main()
     outputLayer.PrintValues();
 
     printf("\nTesting forward propagation...");
-    std::vector<float> testInput1 = { 1.0f, 0.0f };
     std::vector<float> forwardPropResult = net.ForwardPropagate(testInput1);
     printf(" Done.\n");
     printf("Forward propagation result: {");
@@ -45,6 +47,17 @@ int main()
 
 
     printf("Neural net values after forward propagation: \n");
+    printf("Hidden layer neurons:\n");
+    hiddenLayer.PrintValues();
+    printf("Output layer neurons:\n");
+    outputLayer.PrintValues();
+
+
+    printf("\n\nTesting back propagation...");
+    net.Backpropagate(testExpectedOutput1);
+    printf(" Done.\n");
+
+    printf("Neural net values after back propagation: \n");
     printf("Hidden layer neurons:\n");
     hiddenLayer.PrintValues();
     printf("Output layer neurons:\n");
