@@ -23,8 +23,8 @@ int main()
     
     //Todo: Test network with larger data set
     //Todo: Find real data to test the on the network. This is just mock data with no meaning
-    std::vector<float> testInput1 = { 0.5f, 0.0f };
-    std::vector<float> testExpectedOutput1 = { 0.0f, 0.5f };
+    std::vector<float> inputData = { 0.5f, 0.0f };
+    std::vector<float> expectedOutputData = { 0.0f, 0.5f };
 
     //Output initial neuron values
     printf("Created a neural network with %d inputs, %d hidden neurons, and %d output neurons.\n", numInputs, numHiddenNeurons, numOutputNeurons);
@@ -37,7 +37,7 @@ int main()
 
     //Train network
     printf("\nTraining neural network with %d runs...", numTrainingRuns);
-    net.Train({ testInput1 }, { testExpectedOutput1 }, numTrainingRuns);
+    net.Train({ inputData }, { expectedOutputData }, numTrainingRuns);
     printf(" Done.\n");
 
     //Output neuron values post training
