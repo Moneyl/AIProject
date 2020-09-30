@@ -7,6 +7,9 @@ std::vector<float> NeuralNet::ForwardPropagate(const std::vector<float>& inputBa
     //Feed first layer inputs (equivalent to an input layer)
     std::vector<float> inputs = inputBase;
 
+    /*Todo: Make this work with more than one hidden layer + hidden layers with more 1 neuron. 
+            This implementation only works for a single 1 neuron hidden layer as that was used for the first tests of the neural net.*/
+
     //Loop through each layer, and each neuron, using output of each neuron as inputs for the next layer
     for (auto& layer : Layers)
     {
