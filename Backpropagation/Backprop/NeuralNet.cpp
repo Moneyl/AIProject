@@ -1,4 +1,6 @@
 #include "NeuralNet.h"
+#include <algorithm>
+#include <fstream>
 
 std::vector<float> NeuralNet::ForwardPropagate(const std::vector<float>& inputBase)
 {
@@ -48,7 +50,7 @@ void NeuralNet::Backpropagate(const std::vector<float>& expectedOutputs)
                 float error = 0.0f;
                 Layer& nextLayer = Layers[i + 1];
 
-                //For the hidden layer sum the multiples of each neurons weight and error deltas
+                //For hidden layers sum the multiples of the weight and error delta for the next layers neurons
                 for (auto& neuron : nextLayer.Neurons)
                     error += neuron.Weights[j] * neuron.ErrorDelta;
 
@@ -99,6 +101,12 @@ void NeuralNet::UpdateNeuronWeights(const std::vector<float>& inputBase)
 
 void NeuralNet::Train(std::vector<std::vector<float>> inputs, std::vector<std::vector<float>> expectedOutputs, int numTrainingRuns)
 {
+    //Open output stream to file to write outputs
+    std::ofstream out;
+    //Removes existing contents of file on each run
+    out.open("./NeuralNetOut.csv", std::ios::out | std::ios::trunc);
+    out << "Run,MSE,RMSE\n";
+
     //Train the network numTrainingRuns times
     for (int run = 0; run < numTrainingRuns; run++)
     {
@@ -111,9 +119,21 @@ void NeuralNet::Train(std::vector<std::vector<float>> inputs, std::vector<std::v
 
             //First forward propagate the input
             std::vector<float> outputs = ForwardPropagate(input);
+
+            //Calculate the root mean square error. Equal to the standard deviation of the errors
+            float error0 = powf(expectedOutputs[i][0] - outputs[0], 2.0f);
+            float error1 = powf(expectedOutputs[i][1] - outputs[1], 2.0f);
+            float mse = (error0 + error1) / 2.0f;
+            float rmse = sqrtf(mse);
+            //Output mse and rmse to csv file
+            out << run << "," << mse << "," << rmse << "\n";
+
+            //Todo: Determine if this should be done at the end of each run instead of per input
             //Next, back propagate the network to get the error for each neuron and update their weights
             Backpropagate(expectedOutput);
             UpdateNeuronWeights(input);
         }
     }
+    
+    out.close();
 }
