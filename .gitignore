@@ -271,3 +271,7 @@ cmake-build-debug/
 cmake-build-release/
 
 cmake-build-relwithdebinfo/
+
+Backpropagation/Backprop/NeuralNetOut.csv
+
+Backpropagation/Backprop/NeuralNetOut.txt
